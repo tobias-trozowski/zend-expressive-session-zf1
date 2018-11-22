@@ -39,7 +39,7 @@ $aggregator = new ConfigAggregator(
 ```
 
 Otherwise, you will need to map `Zend\Expressive\Session\SessionPersistenceInterface`
-to `Tobias\Zend\Expressive\Zf1Session\Persistence\PhpSerializableSessionPersistence` in your dependency
+to `Tobias\Zend\Expressive\Zf1Session\Persistence\SessionPersistence` in your dependency
 injection container.
 
 In addition to this you can configure all [parameters](http://php.net/manual/de/function.session-start.php#refsect1-function.session-start-parameters) 

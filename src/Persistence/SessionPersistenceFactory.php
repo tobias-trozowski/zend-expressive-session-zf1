@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Tobias\Zend\Expressive\Zf1Session\Persistence;
 
-use Interop\Config\ConfigurationTrait;
-use Interop\Config\ProvidesDefaultOptions;
 use Psr\Container\ContainerInterface;
-
+use function array_merge;
 use function ini_get;
 
-final class SessionPersistenceFactory implements ProvidesDefaultOptions
+final class SessionPersistenceFactory
 {
-    use ConfigurationTrait;
-
     /**
      * @param ContainerInterface $container
      *
@@ -21,21 +17,14 @@ final class SessionPersistenceFactory implements ProvidesDefaultOptions
      */
     public function __invoke(ContainerInterface $container): SessionPersistence
     {
-        /** @var array $options */
-        $options = $this->optionsWithFallback($container->get('config'));
+        $config = $container->has('config') ? $container->get('config') : [];
+        $options = array_merge($this->defaultOptions(), $config['session'] ?? []);
+
         return new SessionPersistence($options);
     }
 
     /**
-     * @inheritdoc \Interop\Config\RequiresConfig::dimensions
-     */
-    public function dimensions(): iterable
-    {
-        return ['session'];
-    }
-
-    /**
-     * Returns a list of default options, which are merged in \Interop\Config\RequiresConfig::options()
+     * Returns a list of default options
      *
      * @return iterable List with default options and values, can be nested
      */

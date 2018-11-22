@@ -25,7 +25,19 @@ class SessionPersistenceFactoryTest extends TestCase
     public function testServiceWithConfigIsCreated(): void
     {
         $container = $this->prophesize(ContainerInterface::class);
-        $container->get('config')->willReturn()->shouldBeCalled();
+        $container->has('config')->willReturn(true)->shouldBeCalled();
+        $container->get('config')->willReturn([])->shouldBeCalled();
+
+        $instance = $this->factory->__invoke($container->reveal());
+
+        $this->assertInstanceOf(SessionPersistence::class, $instance);
+        $this->assertInstanceOf(SessionPersistenceInterface::class, $instance);
+    }
+
+    public function testServiceWithoutConfigIsCreated(): void
+    {
+        $container = $this->prophesize(ContainerInterface::class);
+        $container->has('config')->willReturn(false)->shouldBeCalled();
 
         $instance = $this->factory->__invoke($container->reveal());
 
